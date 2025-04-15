@@ -1,17 +1,31 @@
 package fr.esaip.ir4.ad;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
+
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
+        EntityManager em = emf.createEntityManager();
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+        try {
+            Livre livre = em.find(Livre.class, 1L); // ID = 1
+            if (livre != null) {
+                System.out.println("Livre trouvé : ID = " + livre.getId());
+                System.out.println("Livre trouvé : Titre = " + livre.getTitre());
+                System.out.println("Livre trouvé : Auteur = " + livre.getAuteur());
+
+            } else {
+                System.out.println("Aucun livre avec cet ID.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            em.close();
+            emf.close();
         }
     }
-}
+    }
